@@ -16,7 +16,8 @@ def cal_v(rn,rg,a,h0,t0,x):
 
     return v
 def overlay_funcs(x_arr): #映射x序列到v
-    return lambda rn,rg,a,h0,t0:[(lambda rn,rg,a,h0,t0: cal_v(rn,rg,a,h0,t0,x))(rn,rg,a,h0,t0) for x in x_arr]
+    return lambda rn,rg,a,h0,t0:[(lambda rn,rg,a,h0,t0: cal_v(rn,rg,a,h0,t0,x))(rn,rg,a,h0,t0)
+                                 for x in x_arr]
 def loss_func(x_arr,y): #合成函数和样本y的差距损失
 
    return lambda args : sum(((np.array([overlay_funcs(x_arr)(args[i],args[i+1],args[i+2],args[i+3],args[i+4])
@@ -25,9 +26,15 @@ def loss_func(x_arr,y): #合成函数和样本y的差距损失
 if __name__ == '__main__':
     # print(overlay_funcs([1,1])(1,2))
     # print(loss_func([1,2,3,4],[0,0,0,1])([1,2,3,4]))
-    args=np.array([1,2,3,4,5,1,1,1,1,1]) #rn,rg 初始值
-    x_arr = [1,2,3,4]
-    y=np.array([5,6,7,8],dtype=np.float32)
+    # args=np.array([1,1,1,1,1,1,1,1,1,1]) #rn,rg 初始值
+    args = np.random.rand(10)
+    print(args)
+    # x_arr = [1,2,3,4]
+    # y=np.array([5,6,7,8],dtype=np.float32)
+    arr = np.loadtxt('data.csv',delimiter=',')
+    x_arr=arr[:,0]
+    y=arr[:,1]
+    # print(arr)
     res = minimize(loss_func(x_arr,y), args, method='SLSQP')
     print(res.success) #优化是否成功
     print(res.x) #最后得到的rn, rg 值
