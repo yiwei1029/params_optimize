@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.optimize import minimize
 from scipy import integrate
-
+from config import cons
 
 def cal_v(rn, rg, a, h0, t0, x):
     '''
@@ -32,19 +32,24 @@ def map_func(x_arr):  # 映射x序列到v
 def overlay_funcs(x_arr):
     return lambda args: [map_func(x_arr)(args[i], args[i + 1], args[i + 2], args[i + 3], args[i + 4])
                          for i in range(0, len(args), 5)]
-def loss_func(x_arr,y):
+
+
+def loss_func(x_arr, y):
     return lambda args: sum((np.array(overlay_funcs(x_arr)(args)).sum(0)
-                             -y)**2)
+                             - y) ** 2)
+
+
+
 
 if __name__ == '__main__':
     # print(map_func([1, 2, 3, 4])(1, 2, 3, 4, 5))
     # print(loss_func([1,2,3,4],[1,2,3,4])([1,1,1,1,1]))
-    args = np.array([0.1, 0.1, 100, 50, 0, 0.1, 0.1, 100, 50, 0])  # rn,rg 初始值
-    # args = np.random.rand(10)
-    arr = np.loadtxt('data.csv', delimiter=',')
+    # args = np.array([0.1, 0.1, 100, 50, 0, 0.1, 0.1, 100, 50, 0])  # rn,rg 初始值
+    args = np.random.rand(10)
+    arr = np.loadtxt('data.csv', delimiter=',')[:500]
     x_arr = arr[:, 0]
     y = arr[:, 1]
-    res = minimize(loss_func(x_arr, y), args, method='L-BFGS-B')
+    res = minimize(loss_func(x_arr, y), args, method='SLSQP', constraints=cons)
     print(res.success)  # 优化是否成功
     print(res.x)  # 最后得到的rn, rg 值
     print(res.fun / len(y))  # 最终损失函数的值
