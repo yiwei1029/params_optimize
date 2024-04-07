@@ -46,7 +46,7 @@ if __name__ == '__main__':
     # print(loss_func([1,2,3,4],[1,2,3,4])([1,1,1,1,1]))
     # args = np.array([0.1, 0.1, 100, 50, 0, 0.1, 0.1, 100, 50, 0])  # rn,rg 初始值
     args = np.random.rand(10)
-    arr = np.loadtxt('data.csv', delimiter=',')[:500]
+    arr = np.loadtxt('data.csv', delimiter=',')
     x_arr = arr[:, 0]
     y = arr[:, 1]
     res = minimize(loss_func(x_arr, y), args, method='SLSQP', constraints=cons)
