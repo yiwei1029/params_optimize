@@ -39,8 +39,6 @@ def loss_func(x_arr, y):
                              - y) ** 2)
 
 
-
-
 if __name__ == '__main__':
     # print(map_func([1, 2, 3, 4])(1, 2, 3, 4, 5))
     # print(loss_func([1,2,3,4],[1,2,3,4])([1,1,1,1,1]))
@@ -49,7 +47,7 @@ if __name__ == '__main__':
     arr = np.loadtxt('data.csv', delimiter=',')
     x_arr = arr[:, 0]
     y = arr[:, 1]
-    res = minimize(loss_func(x_arr, y), args, method='SLSQP', constraints=cons)
+    res = minimize(loss_func(x_arr, y), args, method='COBYLA', constraints=cons)
     print(res.success)  # 优化是否成功
     print(res.x)  # 最后得到的rn, rg 值
     print(res.fun / len(y))  # 最终损失函数的值
