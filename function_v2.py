@@ -16,6 +16,8 @@ def cal_v(rn, rg, a, h0, t0, x):
                              -np.pi / 3 * rn ** 4 / rg * (x - t0) ** 3 * (1 - u) ** 2 * (1 + 2 * u)), 0, 1)[0])) + h0)
     return v
 
+def map_func_proto(x_arr):
+    return lambda rn, rg, a, h0, t0: [cal_v(rn, rg, a, h0, t0, x) for x in x_arr]
 
 def map_func(x_arr):  # 映射x序列到v
     return lambda rn, rg, a, h0, t0: \

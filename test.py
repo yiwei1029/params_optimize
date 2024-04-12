@@ -56,11 +56,11 @@ if __name__ == '__main__':
     # args = np.array([1, 1, 50, 50, 1, 0.1, 1, 100, 50, 1])  # rn,rg 初始值
     args = np.random.rand(10)
     # print(args)
-    arr = np.loadtxt('data.csv', delimiter=',')[:1000]
+    arr = np.loadtxt('data.csv', delimiter=',')[:400]
     x_arr = arr[:, 0]
     y = arr[:, 1]
     res = minimize(loss_func(x_arr, y), args, method='SLSQP', constraints=cons)
     print(res.success)  # 优化是否成功
     print(res.x)  # 最后得到的rn, rg 值
     print(res.fun / len(y))  # 最终损失函数的值
-    plot_res()
+    plot_res(res.x, x_arr, y)
