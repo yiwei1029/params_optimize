@@ -1,7 +1,9 @@
 import numpy as np
+from matplotlib import pyplot as plt
 from scipy.optimize import minimize
 from scipy import integrate
 from config import cons
+
 
 def cal_v(rn, rg, a, h0, t0, x):
     '''
@@ -39,15 +41,26 @@ def loss_func(x_arr, y):
                              - y) ** 2)
 
 
+def plot_res(args, x_arr, y):
+    y_pred = np.array(overlay_funcs(x_arr)(args)).sum(0)
+    plt.figure(figsize=(10, 8))
+    plt.scatter(x_arr, y_pred, label='predicted')
+    plt.scatter(x_arr, y, label='actual')
+    plt.legend(loc='upper right')
+    plt.show()
+
+
 if __name__ == '__main__':
     # print(map_func([1, 2, 3, 4])(1, 2, 3, 4, 5))
     # print(loss_func([1,2,3,4],[1,2,3,4])([1,1,1,1,1]))
-    # args = np.array([0.1, 0.1, 100, 50, 0, 0.1, 0.1, 100, 50, 0])  # rn,rg 初始值
+    # args = np.array([1, 1, 50, 50, 1, 0.1, 1, 100, 50, 1])  # rn,rg 初始值
     args = np.random.rand(10)
-    arr = np.loadtxt('data.csv', delimiter=',')
+    # print(args)
+    arr = np.loadtxt('data.csv', delimiter=',')[:1000]
     x_arr = arr[:, 0]
     y = arr[:, 1]
-    res = minimize(loss_func(x_arr, y), args, method='COBYLA', constraints=cons)
+    res = minimize(loss_func(x_arr, y), args, method='SLSQP', constraints=cons)
     print(res.success)  # 优化是否成功
     print(res.x)  # 最后得到的rn, rg 值
     print(res.fun / len(y))  # 最终损失函数的值
+    plot_res()
